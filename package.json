@@ -1,5 +1,5 @@
 {
-  "name": "clock",
+  "name": "clock-today",
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
@@ -17,9 +17,6 @@
     "always_on_top": true
   },
   "platformOverrides":{
-    "osx64": {
-      "frame": true
-    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
