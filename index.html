@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      background: url(./img/bg.jpg) no-repeat center center;
+    }
+    .clock {
+      position: relative;
+      width: 80%;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4B84DB), color-stop(0.4, #C4D2E1), color-stop(0.5, #DABA9C), color-stop(0.6, #6D625D), to(#000));
+    }
+    .clock-wise {
+      position: absolute;
+      width: 2px;
+      height: 45%;
+      background: #030303;
+      left: 50%;
+      margin-left: -1px;
+      top: 50%;
+      transform-origin: 50% 0%;
+      box-shadow: 0 5px 10px #000;
+    }
+    .clock-wise:after {
+      content: '';
+      display: inline-block;
+      position: absolute;
+      border-top: 10px solid #030303;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      left: -4px;
+      top: 100%;
+    }
+    .clock-wise:before {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      right: -15px;
+      top: -12px;
+      box-shadow: 0 0 60px #fff;
+      background: #FEFFFE;
+    }
+    .time {
+      position: absolute;
+      left: 50%;
+      top: 30%;
+      transform: translate3d(-50%, 0, 0);
+      color: #fafafa;
+      font-size: 28px;
+      font-weight: 700;
+      text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+      border: 5px solid #fff;
+      padding: 1% 5%;
+      box-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+    }
+  </style>
+</head>
+<body>
+  <div class="clock" id="clock">
+    <div class="time" id="time"></div>
+    <div class="clock-wise" id="clock-wise"></div>
+  </div>
+  <script>
+    var path = './';
+    var fs = require('fs');
+
+    fs.watch(path, function() {
+      if (location)
+        location.reload();
+    });
+    window.onload = function () {
+      var clock = document.getElementById('clock')
+      var clockWise = document.getElementById('clock-wise')
+      var time = document.getElementById('time')
+      var totalSeconds = 24 * 60 * 60
+      var currSeconds = 0
+      var clockPercent = 0
+      clockInit()
+
+      window.addEventListener('resize', resizeFrame, false)
+
+      function resizeFrame() {
+        var clockWidth = 0
+        var winHeight = window.innerHeight
+        if (window.innerHeight < window.innerWidth) {
+          clockWidth = window.innerHeight * 0.8
+        } else {
+          clockWidth = window.innerWidth * 0.8
+        }
+        clock.style.width = clockWidth + 'px'
+        clock.style.height = clockWidth + 'px'
+        clock.style.top = (winHeight - clock.clientHeight) / 2 + 'px'
+      }
+      function clockInit() {
+        var clockWidth = 0
+        var winHeight = window.innerHeight
+        if (window.innerHeight < window.innerWidth) {
+          clockWidth = window.innerHeight * 0.8
+        } else {
+          clockWidth = window.innerWidth * 0.8
+        }
+        clock.style.width = clockWidth + 'px'
+        clock.style.height = clockWidth + 'px'
+        clock.style.top = (winHeight - clock.clientHeight) / 2 + 'px'
+        window.requestAnimationFrame(run)
+      }
+      function run () {
+        var date = new Date()
+        var second = date.getSeconds()
+        var minute = date.getMinutes()
+        var hour = date.getHours()
+        currSeconds = (hour * 60 * 60) + (minute * 60) + second
+        clockPercent = currSeconds / totalSeconds
+        clockWise.style.transform = 'rotate(' + (clockPercent * 360) + 'deg)'
+        time.textContent = format(hour) + ':' + format(minute) + ':' + format(second)
+        window.requestAnimationFrame(run)
+      }
+      function format(val) {
+        return (val < 10 ? ('0' + val) : val)
+      }
+    }
+  </script>
+</body>
+</html>
